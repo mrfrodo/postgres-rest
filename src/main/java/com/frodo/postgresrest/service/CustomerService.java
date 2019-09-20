@@ -23,4 +23,9 @@ public class CustomerService {
         Optional<Customer> one = customerRepository.findById(id);
         return one.get();
     }
+
+    public Customer save(Customer customer) {
+        Customer created = customerRepository.save(customer);
+        return created;
+    }
 }

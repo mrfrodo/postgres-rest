@@ -3,9 +3,7 @@ package com.frodo.postgresrest.controller;
 import com.frodo.postgresrest.domain.Customer;
 import com.frodo.postgresrest.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +26,10 @@ public class Controller {
     @GetMapping("/{id}")
     public Customer findOne(@PathVariable Long id) {
         return customerService.findById(id);
+    }
+
+    @PostMapping("/")
+    public Customer saveOne(@RequestBody Customer customer) {
+        return customerService.save(customer);
     }
 }
