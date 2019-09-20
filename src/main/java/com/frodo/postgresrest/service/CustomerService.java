@@ -28,4 +28,12 @@ public class CustomerService {
         Customer created = customerRepository.save(customer);
         return created;
     }
+
+    public Customer delete(Long id) {
+        Optional<Customer> customerToDelete = customerRepository
+                .findById(id);
+
+        customerRepository.delete(customerToDelete.get());
+        return customerToDelete.get();
+    }
 }

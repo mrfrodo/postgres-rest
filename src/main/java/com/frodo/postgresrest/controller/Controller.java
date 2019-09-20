@@ -32,4 +32,9 @@ public class Controller {
     public Customer saveOne(@RequestBody Customer customer) {
         return customerService.save(customer);
     }
+
+    @DeleteMapping("/{id}")
+    public Customer deleteOne(@PathVariable Long id) {
+        return customerService.delete(id);
+    }
 }
