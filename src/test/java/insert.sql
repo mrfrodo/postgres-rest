@@ -1,0 +1,2 @@
+insert into customer (Id, first_name, last_name, info ) values (1, 'frodo', 'baggins',' { "name":"frodo", "birth":"1786-12-14", "city":"BagEnd"}');
+insert into customer (Id, first_name, last_name, info ) values (2, 'gandalf', 'grey',' { "name":"gandalf", "birth":"1786-12-31", "city":"MorDor"}
