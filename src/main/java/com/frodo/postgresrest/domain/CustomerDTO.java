@@ -13,5 +13,5 @@ import lombok.Setter;
 public class CustomerDTO {
     private String firstName;
     private String lastName;
-    private JSONPObject info;
+    private Object info;
 }

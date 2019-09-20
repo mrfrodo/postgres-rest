@@ -1,8 +1,10 @@
 package com.frodo.postgresrest.controller;
 
 import com.frodo.postgresrest.domain.Customer;
+import com.frodo.postgresrest.domain.CustomerDTO;
 import com.frodo.postgresrest.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,9 +25,11 @@ public class Controller {
         return customerService.findAll();
     }
 
-    @GetMapping("/{id}")
-    public Customer findOne(@PathVariable Long id) {
-        return customerService.findById(id);
+    @GetMapping(value = "/{id}",
+            produces = "application/json; charset=UTF-8")
+    public CustomerDTO findOne(@PathVariable Long id) {
+        CustomerDTO byId = customerService.findById(id);
+        return  byId;
     }
 
     @PostMapping("/")

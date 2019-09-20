@@ -1,15 +1,21 @@
 package com.frodo.postgresrest.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.frodo.postgresrest.domain.Customer;
+import com.frodo.postgresrest.domain.CustomerDTO;
 import com.frodo.postgresrest.repository.CustomerRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CustomerService {
+
+    @Autowired
+    ModelMapper modelMapper;
 
     @Autowired
     CustomerRepository customerRepository;
@@ -19,9 +25,11 @@ public class CustomerService {
         return all;
     }
 
-    public Customer findById(Long id) {
+    public CustomerDTO findById(Long id) {
         Optional<Customer> one = customerRepository.findById(id);
-        return one.get();
+        CustomerDTO customerDTO = convertToDto(one.get());
+        //return one.get();
+        return customerDTO;
     }
 
     public Customer save(Customer customer) {
@@ -35,5 +43,20 @@ public class CustomerService {
 
         customerRepository.delete(customerToDelete.get());
         return customerToDelete.get();
+    }
+
+    private CustomerDTO convertToDto(Customer customer) {
+        CustomerDTO customerDTO = modelMapper.map(customer, CustomerDTO.class);
+        String jsonAsString = customer.getInfo();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            Object o = objectMapper.readValue(jsonAsString, Object.class);
+            customerDTO.setInfo(o);
+        } catch (IOException e) {
+            System.out.println("ERROR PARSING JSON STRING");
+        }
+
+        return customerDTO;
     }
 }
