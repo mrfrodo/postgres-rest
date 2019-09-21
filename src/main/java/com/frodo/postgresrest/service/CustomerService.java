@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,9 +21,15 @@ public class CustomerService {
     @Autowired
     CustomerRepository customerRepository;
 
-    public List<Customer> findAll() {
+    public List<CustomerDTO> findAll() {
         List<Customer> all = customerRepository.findAll();
-        return all;
+        List<CustomerDTO> allDTOs = new ArrayList<>();
+        for (Customer c : all) {
+            CustomerDTO customerDTO = convertToDto(c);
+            allDTOs.add(customerDTO);
+        }
+        //return all;
+        return allDTOs;
     }
 
     public CustomerDTO findById(Long id) {

@@ -21,7 +21,7 @@ public class Controller {
     }
 
     @GetMapping("/")
-    public List<Customer> findAllCustomer() {
+    public List<CustomerDTO> findAllCustomer() {
         return customerService.findAll();
     }
 
