@@ -33,7 +33,7 @@ public class Controller {
     }
 
     @PostMapping("/")
-    public Customer saveOne(@RequestBody Customer customer) {
+    public Customer saveOne(@RequestBody CustomerDTO customer) {
         return customerService.save(customer);
     }
 

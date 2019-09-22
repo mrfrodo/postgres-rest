@@ -22,7 +22,8 @@ public class CustomerService {
     CustomerRepository customerRepository;
 
     public List<CustomerDTO> findAll() {
-        List<Customer> all = customerRepository.findAll();
+        //List<Customer> all = customerRepository.findAll();
+        List<Customer> all = customerRepository.findAllByOrderByIdDesc();
         List<CustomerDTO> allDTOs = new ArrayList<>();
         for (Customer c : all) {
             CustomerDTO customerDTO = convertToDto(c);
@@ -39,7 +40,8 @@ public class CustomerService {
         return customerDTO;
     }
 
-    public Customer save(Customer customer) {
+    public Customer save(CustomerDTO customerDTO) {
+        Customer customer = convertToEntity(customerDTO);
         Customer created = customerRepository.save(customer);
         return created;
     }
@@ -65,5 +67,12 @@ public class CustomerService {
         }
 
         return customerDTO;
+    }
+
+    private Customer convertToEntity(CustomerDTO customerDTO) {
+        Customer customer = modelMapper.map(customerDTO, Customer.class);
+        String jsonAsString = customer.getInfo();
+        customer.setInfo(jsonAsString);
+        return customer;
     }
 }

@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CustomerDTO {
+    private Long id;
     private String firstName;
     private String lastName;
     private Object info;
