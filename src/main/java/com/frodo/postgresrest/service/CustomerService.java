@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.frodo.postgresrest.domain.Customer;
 import com.frodo.postgresrest.domain.CustomerDTO;
 import com.frodo.postgresrest.repository.CustomerRepository;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,5 +88,22 @@ public class CustomerService {
         customer.setInfo(jsonString);
         return customer;
 
+    }
+
+    public CustomerDTO update(Long id, CustomerDTO newCustomer) {
+        Optional<Customer> customerToBeUpdated = customerRepository.findById(id);
+        if (customerToBeUpdated.isPresent()) {
+            Customer updatedCustomer = convertToEntity(newCustomer);
+            Object info = newCustomer.getInfo();
+            String jsonString = new JSONObject((LinkedHashMap) info).toString();
+            updatedCustomer.setId(id);
+            updatedCustomer.setInfo(jsonString);
+            updatedCustomer.setFirstName(newCustomer.getFirstName());
+            updatedCustomer.setLastName(newCustomer.getLastName());
+            customerRepository.save(updatedCustomer);
+            return newCustomer;
+        } else {
+            return null;
+        }
     }
 }

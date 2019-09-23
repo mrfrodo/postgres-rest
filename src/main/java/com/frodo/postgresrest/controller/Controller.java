@@ -1,6 +1,5 @@
 package com.frodo.postgresrest.controller;
 
-import com.frodo.postgresrest.domain.Customer;
 import com.frodo.postgresrest.domain.CustomerDTO;
 import com.frodo.postgresrest.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +35,17 @@ public class Controller {
         return customerService.save(customer);
     }
 
+
+
     @DeleteMapping("/{id}")
     public CustomerDTO deleteOne(@PathVariable Long id) {
         return customerService.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public CustomerDTO updateOne(@PathVariable Long id, @RequestBody CustomerDTO customer) {
+        CustomerDTO updated = customerService.update(id, customer);
+        return  updated;
     }
 
     @DeleteMapping("/all")
