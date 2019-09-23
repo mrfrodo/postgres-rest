@@ -4,7 +4,6 @@ import com.frodo.postgresrest.domain.Customer;
 import com.frodo.postgresrest.domain.CustomerDTO;
 import com.frodo.postgresrest.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,12 +32,18 @@ public class Controller {
     }
 
     @PostMapping("/")
-    public Customer saveOne(@RequestBody CustomerDTO customer) {
+    public CustomerDTO saveOne(@RequestBody CustomerDTO customer) {
         return customerService.save(customer);
     }
 
     @DeleteMapping("/{id}")
-    public Customer deleteOne(@PathVariable Long id) {
+    public CustomerDTO deleteOne(@PathVariable Long id) {
         return customerService.delete(id);
+    }
+
+    @DeleteMapping("/all")
+    public String deleteAll() {
+        customerService.deleteAll();
+        return "all deleted ok";
     }
 }

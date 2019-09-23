@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.frodo.postgresrest.domain.Customer;
 import com.frodo.postgresrest.domain.CustomerDTO;
 import com.frodo.postgresrest.repository.CustomerRepository;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,18 +43,28 @@ public class CustomerService {
         return customerDTO;
     }
 
-    public Customer save(CustomerDTO customerDTO) {
+    public CustomerDTO save(CustomerDTO customerDTO) {
         Customer customer = convertToEntity(customerDTO);
         Customer created = customerRepository.save(customer);
-        return created;
+        return convertToDto(created);
+        //return created;
     }
 
-    public Customer delete(Long id) {
+    public CustomerDTO delete(Long id) {
         Optional<Customer> customerToDelete = customerRepository
                 .findById(id);
 
         customerRepository.delete(customerToDelete.get());
-        return customerToDelete.get();
+        return convertToDto(customerToDelete.get());
+    }
+
+    public void deleteAll() {
+        List<Customer> customersToDelete = customerRepository
+                .findAll();
+
+        for (Customer c : customersToDelete) {
+            customerRepository.delete(c);
+        }
     }
 
     private CustomerDTO convertToDto(Customer customer) {
@@ -71,8 +84,10 @@ public class CustomerService {
 
     private Customer convertToEntity(CustomerDTO customerDTO) {
         Customer customer = modelMapper.map(customerDTO, Customer.class);
-        String jsonAsString = customer.getInfo();
-        customer.setInfo(jsonAsString);
+        Object info = customerDTO.getInfo();
+        String jsonString = new JSONObject((LinkedHashMap) info).toString();
+        customer.setInfo(jsonString);
         return customer;
+
     }
 }
