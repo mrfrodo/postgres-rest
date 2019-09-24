@@ -35,16 +35,17 @@ public class Controller {
         return customerService.save(customer);
     }
 
-
-
     @DeleteMapping("/{id}")
     public CustomerDTO deleteOne(@PathVariable Long id) {
         return customerService.delete(id);
     }
 
     @PutMapping("/{id}")
-    public CustomerDTO updateOne(@PathVariable Long id, @RequestBody CustomerDTO customer) {
+    public CustomerDTO updateOne(@PathVariable Long id, @RequestBody CustomerDTO customer) throws Exception {
         CustomerDTO updated = customerService.update(id, customer);
+        if (updated == null) {
+            throw new Exception("customer id not found: "+customer.getId());
+        }
         return  updated;
     }
 

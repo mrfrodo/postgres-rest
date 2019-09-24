@@ -9,9 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CustomerDTO {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private Address address;
+public class Address {
+    private String streetName;
+    private String city;
+    private String country;
 }

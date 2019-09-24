@@ -1,6 +1,8 @@
 package com.frodo.postgresrest.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.frodo.postgresrest.domain.Address;
 import com.frodo.postgresrest.domain.Customer;
 import com.frodo.postgresrest.domain.CustomerDTO;
 import com.frodo.postgresrest.repository.CustomerRepository;
@@ -68,12 +70,12 @@ public class CustomerService {
 
     private CustomerDTO convertToDto(Customer customer) {
         CustomerDTO customerDTO = modelMapper.map(customer, CustomerDTO.class);
-        String jsonAsString = customer.getInfo();
+        String jsonAsString = customer.getAddress();
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            Object o = objectMapper.readValue(jsonAsString, Object.class);
-            customerDTO.setInfo(o);
+            Address a = objectMapper.readValue(jsonAsString, Address.class);
+            customerDTO.setAddress(a);
         } catch (IOException e) {
             System.out.println("ERROR PARSING JSON STRING");
         }
@@ -83,25 +85,35 @@ public class CustomerService {
 
     private Customer convertToEntity(CustomerDTO customerDTO) {
         Customer customer = modelMapper.map(customerDTO, Customer.class);
-        Object info = customerDTO.getInfo();
-        String jsonString = new JSONObject((LinkedHashMap) info).toString();
-        customer.setInfo(jsonString);
+        Address a = customerDTO.getAddress();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String addressAsString = objectMapper.writeValueAsString(a);
+            customer.setAddress(addressAsString);
+        } catch (JsonProcessingException e) {
+            System.out.println("Can not parse json");
+        }
         return customer;
-
     }
 
     public CustomerDTO update(Long id, CustomerDTO newCustomer) {
         Optional<Customer> customerToBeUpdated = customerRepository.findById(id);
         if (customerToBeUpdated.isPresent()) {
             Customer updatedCustomer = convertToEntity(newCustomer);
-            Object info = newCustomer.getInfo();
-            String jsonString = new JSONObject((LinkedHashMap) info).toString();
+            Address a = newCustomer.getAddress();
             updatedCustomer.setId(id);
-            updatedCustomer.setInfo(jsonString);
             updatedCustomer.setFirstName(newCustomer.getFirstName());
             updatedCustomer.setLastName(newCustomer.getLastName());
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String addressAsString = objectMapper.writeValueAsString(a);
+                updatedCustomer.setAddress(addressAsString);
+            } catch (JsonProcessingException e) {
+                System.out.println("Can not parse json");
+            }
             customerRepository.save(updatedCustomer);
-            return newCustomer;
+            convertToDto(updatedCustomer);
+            return convertToDto(updatedCustomer);
         } else {
             return null;
         }
