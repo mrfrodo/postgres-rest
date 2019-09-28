@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @Getter
 @Setter
@@ -13,5 +15,6 @@ public class CustomerDTO {
     private Long id;
     private String firstName;
     private String lastName;
+    @NotNull
     private Address address;
 }
